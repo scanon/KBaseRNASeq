@@ -29,9 +29,9 @@ from biokbase.auth import Token
 from mpipe import OrderedStage , Pipeline
 import multiprocessing as mp
 import re
-import doekbase.data_api
-from doekbase.data_api.annotation.genome_annotation.api import GenomeAnnotationAPI , GenomeAnnotationClientAPI
-from doekbase.data_api.sequence.assembly.api import AssemblyAPI , AssemblyClientAPI
+#import doekbase.data_api
+#from doekbase.data_api
+#from doekbase.data_api
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from GenomeFileUtil.GenomeFileUtilClient import GenomeFileUtil
 import datetime

@@ -9,9 +9,9 @@ import datetime
 import contig_id_mapping as c_mapping
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from GenomeFileUtil.GenomeFileUtilClient import GenomeFileUtil
-import doekbase.data_api
-from doekbase.data_api.annotation.genome_annotation.api import GenomeAnnotationAPI, GenomeAnnotationClientAPI
-from doekbase.data_api.sequence.assembly.api import AssemblyAPI, AssemblyClientAPI
+#import doekbase.data_api
+#from doekbase.data_api
+#from doekbase.data_api
 from biokbase.RNASeq import handler_utils as handler_util
 from biokbase.RNASeq import script_util
 from pprint import pprint,pformat

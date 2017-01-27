@@ -125,7 +125,7 @@ create-test-wrapper:
 	echo 'export KB_RUNTIME=$(DEPLOY_RUNTIME)' >> $(TARGET)/bin/$(EXECUTABLE_SCRIPT_NAME) >> test/script_test/run_tests.sh
 	echo 'export PYTHONPATH="$(DIR)/$(LIB_DIR)"' >> test/script_test/run_tests.sh
 	echo 'export KB_DEPLOYMENT_CONFIG="$(DIR)/deploy.cfg"' >> test/script_test/run_tests.sh
-	echo 'python $(DIR)/test/script_test/basic_test.py $$1 $$2 $$3' \
+	echo '#python $(DIR)/test/script_test/basic_test.py $$1 $$2 $$3' \
 		>> test/script_test/run_tests.sh
 	chmod +x test/script_test/run_tests.sh
 
@@ -189,15 +189,18 @@ test-impl: create-test-wrapper
 	./test/script_test/run_tests.sh
 
 create-test-wrapper:
+	rm test/script_test/run_tests.sh
 	@echo "Creating test script wrapper in test/script_test"
-	echo '#!/bin/bash' > test/script_test/run_tests.sh
-	echo 'export KB_RUNTIME=$(DEPLOY_RUNTIME)' >> test/script_test/run_tests.sh
-	echo 'export PYTHONPATH="$(TARGET)/lib"' >> test/script_test/run_tests.sh
-	echo 'export KB_SERVICE_NAME="$(MODULE_CAPS)"' >> test/script_test/run_tests.sh
-	echo 'export KB_DEPLOYMENT_CONFIG="$(DIR)/deploy.cfg"' >> test/script_test/run_tests.sh
-	echo 'python $(DIR)/test/script_test/basic_test.py $$1 $$2 $$3' \
+	@echo '#!/bin/bash' > test/script_test/run_tests.sh
+	@echo 'export KB_RUNTIME=$(DEPLOY_RUNTIME)' >> test/script_test/run_tests.sh
+	@echo 'export PYTHONPATH="$(TARGET)/lib"' >> test/script_test/run_tests.sh
+	@echo 'export KB_SERVICE_NAME="$(MODULE_CAPS)"' >> test/script_test/run_tests.sh
+	@echo 'export KB_DEPLOYMENT_CONFIG="$(DIR)/deploy.cfg"' >> test/script_test/run_tests.sh
+	@echo 'nosetests -s -x $(DIR)/test/test_classes/test_script_utils.py $$1 $$2 $$3' \
 		>> test/script_test/run_tests.sh
-	chmod +x test/script_test/run_tests.sh
+	@echo '#python $(DIR)/test/script_test/basic_test.py $$1 $$2 $$3' \
+		>> test/script_test/run_tests.sh
+	@chmod +x test/script_test/run_tests.sh
 
 endif
 

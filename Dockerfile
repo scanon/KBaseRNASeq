@@ -17,12 +17,12 @@ RUN \
   make && make deploy && \
   cd /kb/dev_container/modules/handle_service && \
   make && make deploy 
-RUN \
-  . /kb/dev_container/user-env.sh && \
-  cd /kb/dev_container/modules && \
-  rm -rf data_api && \
-  git clone https://github.com/kbase/data_api -b 0.3.0-dev && \
-  pip install --upgrade /kb/dev_container/modules/data_api
+#RUN \
+#  . /kb/dev_container/user-env.sh && \
+#  cd /kb/dev_container/modules && \
+#  rm -rf data_api && \
+#  git clone https://github.com/kbase/data_api -b 0.3.0-dev && \
+#  pip install --upgrade /kb/dev_container/modules/data_api
 ####END OF KBASE #############################
 #apt-get update && apt-get install -y ant && \
 # -----------------------------------------
@@ -30,7 +30,6 @@ RUN \
 # any required dependencies for your module.
 # -----------------------------------------
 RUN apt-get update && apt-get install -y unzip gcc bzip2 ncurses-dev sysstat
-RUN pip install mpipe
 
 WORKDIR /kb/module
 COPY ./deps /kb/deps
@@ -43,20 +42,25 @@ RUN \
   sh /kb/deps/kb_tableMaker/install-tablemaker.sh && \
   sh /kb/deps/kb_ballgown/install-ballgown.sh
 
-COPY ./ /kb/module
-RUN \
-  . /kb/dev_container/user-env.sh && \
-  cd /kb/module && \
-  kb-sdk install AssemblyUtil && \
-  kb-sdk install GenomeFileUtil
+RUN pip install mpipe
+ADD ./requirements.txt /tmp/requirements.txt
+#RUN pip install -r /tmp/requirements.txt
+RUN sh /kb/deps/pylib.sh && pip install --upgrade requests==2.7.0
+
+ADD ./ /kb/module
+#RUN \
+#  . /kb/dev_container/user-env.sh && \
+#  cd /kb/module && \
+#  kb-sdk install AssemblyUtil && \
+#  kb-sdk install GenomeFileUtil
+
 RUN \
   cd /kb/module && \
   make && make deploy
-#  rm -rf narrative_method_store \
 ENV PATH=$PATH:/kb/dev_container/modules/kb_sdk/bin
 WORKDIR /kb/module
-RUN mkdir -p /kb/module/work
-RUN pip install --upgrade requests==2.7.0
+
+RUN mkdir -p /kb/module/work && chmod -R a+rw /kb/module
 RUN pip freeze | grep requests
 ENTRYPOINT [ "./scripts/entrypoint.sh" ]
 CMD [ ]

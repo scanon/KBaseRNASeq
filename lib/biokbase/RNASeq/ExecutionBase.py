@@ -14,9 +14,9 @@ import script_util
 import handler_utils as handler_util
 from biokbase.workspace.client import Workspace
 from biokbase.auth import Token
-import doekbase.data_api
-from doekbase.data_api.annotation.genome_annotation.api import GenomeAnnotationAPI , GenomeAnnotationClientAPI
-from doekbase.data_api.sequence.assembly.api import AssemblyAPI , AssemblyClientAPI
+#import doekbase.data_api
+#from doekbase.data_api
+#from doekbase.data_api
 import requests.packages.urllib3
 requests.packages.urllib3.disable_warnings()
 try:

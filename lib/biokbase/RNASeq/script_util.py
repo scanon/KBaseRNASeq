@@ -28,10 +28,11 @@ except:
 from biokbase.workspace.client import Workspace
 from AssemblyUtil.AssemblyUtilClient import AssemblyUtil
 from GenomeFileUtil.GenomeFileUtilClient import GenomeFileUtil
+from GenomeAnnotationAPI.GenomeAnnotationAPIClient import GenomeAnnotationAPI
 from DataFileUtil.DataFileUtilClient import DataFileUtil
-import doekbase.data_api
-from doekbase.data_api.annotation.genome_annotation.api import GenomeAnnotationAPI, GenomeAnnotationClientAPI
-from doekbase.data_api.sequence.assembly.api import AssemblyAPI, AssemblyClientAPI
+#import doekbase.data_api
+##from doekbase.data_api
+##from doekbase.data_api
 import datetime
 
 from ReadsUtils.ReadsUtilsClient import ReadsUtils
@@ -187,9 +188,10 @@ def get_fasta_from_genome(logger,ws_client,urls,genome_id):
 ### TODO Remove this function from script_util , already moved to rnaseq_util
 def generate_fasta(logger,internal_services,token,ref,output_dir,obj_name):
 	try:
-		ga = GenomeAnnotationAPI(internal_services,
-                             token=token,
-                             ref= ref)
+	        ga = GenomeAnnotationAPI(os.environ['SDK_CALLBACK_URL'], token=token)
+		#ga = GenomeAnnotationAPI(internal_services,
+                #             token=token,
+                #             ref= ref)
 	except Exception as e:
 		raise Exception("Unable to Call GenomeAnnotationAPI : {0}".format("".join(traceback.format_exc())))
 	logger.info("Generating FASTA file from Assembly for {}".format(obj_name))	
@@ -197,7 +199,10 @@ def generate_fasta(logger,internal_services,token,ref,output_dir,obj_name):
 	output_file = os.path.join(output_dir,'{}.fasta'.format(obj_name))
 	fasta_file= io.open(output_file, 'wb')
     	try:
-        	ga.get_assembly().get_fasta().to_file(fasta_file)
+        	assembly = ga.get_assembly({'ref':ref})
+         	au = AssemblyUtil(urls['callback_url'], token=token)
+         	ret = au.get_assembly_as_fasta({'ref':assembly, 'filename': fasta_file})
+		print ret
 	except Exception as e:
 		#raise Exception("Unable to Create FASTA file from Genome Annotation : {0}".format(obj_name))
 		raise Exception("Unable to Create FASTA file from Genome Annotation : {0}".format("".join(traceback.format_exc())))
@@ -215,9 +220,10 @@ def generate_fasta(logger,internal_services,token,ref,output_dir,obj_name):
 ### TODO Remove this function from script_util , already moved to rnaseq_util
 def generate_gff(logger,internal_services,token,ref,output_dir,obj_name,output_file):
         try:
-                ga = GenomeAnnotationAPI(internal_services,
-                             token=token,
-                             ref= ref)
+	        ga = GenomeAnnotationAPI(os.environ['SDK_CALLBACK_URL'], token=token)
+                #ga = GenomeAnnotationAPI(internal_services,
+                #             token=token,
+                #             ref= ref)
         except:
                 raise Exception("Unable to Call GenomeAnnotationAPI : {0}".format(("".join(traceback.format_exc()))))
         logger.info("Requesting GenomeAnnotation GFF for {}".format(obj_name))
